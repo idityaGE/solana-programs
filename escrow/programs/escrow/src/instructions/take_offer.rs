@@ -10,6 +10,7 @@ use anchor_spl::{
 pub struct TakeOffer<'info> {
     // Used to manage associated token accounts
     // ie where a wallet holds a specific type of token
+    // used by "init_if_needed"
     pub associated_token_program: Program<'info, AssociatedToken>,
 
     // Work with either the classic token program or
@@ -30,7 +31,7 @@ pub struct TakeOffer<'info> {
     pub token_mint_b: InterfaceAccount<'info, Mint>,
 
     #[account(
-        init_if_needed,
+        init_if_needed, // ← Creates the account if it doesn't exist!
         payer = taker,
         associated_token::mint = token_mint_a,
         associated_token::authority = taker,
@@ -47,7 +48,7 @@ pub struct TakeOffer<'info> {
     pub taker_token_account_b: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
-        init_if_needed,
+        init_if_needed, // ← Creates the account if it doesn't exist!
         payer = taker,
         associated_token::mint = token_mint_b,
         associated_token::authority = maker,
@@ -103,7 +104,7 @@ pub fn take_offer(context: Context<TakeOffer>) -> Result<()> {
     // Close the vault and return the rent to the maker
     close_token_account(
         &context.accounts.vault,
-        &context.accounts.taker.to_account_info(),
+        &context.accounts.maker.to_account_info(),
         &context.accounts.offer.to_account_info(),
         &context.accounts.token_program,
         signers_seeds,
