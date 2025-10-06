@@ -7,7 +7,7 @@ use anchor_spl::{
 };
 
 #[derive(Accounts)]
-#[instruction(id: u64)]
+#[instruction(id: u64)] // To access the id in the PDA derivation we need to pass it here
 pub struct MakeOffer<'info> {
     // Used to manage associated token accounts
     // ie where a wallet holds a specific type of token

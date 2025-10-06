@@ -28,8 +28,8 @@ pub struct RefundOffer<'info> {
 
     #[account(
         mut,
-        close = maker,
-        has_one = maker,
+        close = maker, // Return the rent to the maker when closed
+        has_one = maker, // Ensure only the maker can refund
         seeds = [b"offer", offer.id.to_le_bytes().as_ref()],
         bump = offer.bump
     )]
@@ -37,9 +37,9 @@ pub struct RefundOffer<'info> {
 
     #[account(
         mut,
-        associated_token::mint = token_mint_a,
-        associated_token::authority = offer,
-        associated_token::token_program = token_program,
+        associated_token::mint = token_mint_a, // The vault holds the same type of token as token_mint_a
+        associated_token::authority = offer, // The offer PDA is the authority over the vault
+        associated_token::token_program = token_program, // Use the same token program
     )]
     pub vault: InterfaceAccount<'info, TokenAccount>,
 }
