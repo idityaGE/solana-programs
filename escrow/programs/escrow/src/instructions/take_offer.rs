@@ -61,6 +61,7 @@ pub struct TakeOffer<'info> {
         close = maker,
         has_one = maker,
         has_one = token_mint_b,
+        has_one = token_mint_a,
         seeds = [b"offer", offer.id.to_le_bytes().as_ref()],
         bump = offer.bump
     )]
